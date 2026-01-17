@@ -9,7 +9,7 @@ interface AmortizationTableProps {
 
 export const AmortizationTable: React.FC<AmortizationTableProps> = ({ records }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [displayCount, setDisplayCount] = useState(12);
+  const [displayCount] = useState(12);
 
   const displayedRecords = isExpanded ? records : records.slice(0, displayCount);
 

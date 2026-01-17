@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalculationResult, RepaymentMethod } from '../types';
+import { CalculationResult } from '../types';
 import { formatCurrency } from '../utils/mortgageCalculator';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
@@ -81,7 +81,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
                 paddingAngle={5}
                 dataKey="value"
               >
-                {chartData.map((entry, index) => (
+                {chartData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

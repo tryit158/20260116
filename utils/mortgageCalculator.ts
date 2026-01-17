@@ -35,7 +35,6 @@ export const calculateMortgage = (params: LoanParams): CalculationResult => {
     } else {
       // Post-Grace Period Calculation
       const remainingMonths = totalMonths - graceMonths;
-      const monthsElapsedSinceGrace = month - graceMonths;
 
       if (method === RepaymentMethod.EqualPrincipalAndInterest) {
         // 本息平均攤還 (Annuity)
