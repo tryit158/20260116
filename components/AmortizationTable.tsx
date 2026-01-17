@@ -7,11 +7,12 @@ interface AmortizationTableProps {
   records: MonthlyRecord[];
 }
 
+const INITIAL_DISPLAY_COUNT = 12;
+
 export const AmortizationTable: React.FC<AmortizationTableProps> = ({ records }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [displayCount] = useState(12);
 
-  const displayedRecords = isExpanded ? records : records.slice(0, displayCount);
+  const displayedRecords = isExpanded ? records : records.slice(0, INITIAL_DISPLAY_COUNT);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-6">
@@ -57,7 +58,7 @@ export const AmortizationTable: React.FC<AmortizationTableProps> = ({ records })
         </table>
       </div>
 
-      {!isExpanded && records.length > displayCount && (
+      {!isExpanded && records.length > INITIAL_DISPLAY_COUNT && (
         <div className="p-4 bg-gray-50 text-center border-t border-gray-100">
           <button 
             onClick={() => setIsExpanded(true)}
