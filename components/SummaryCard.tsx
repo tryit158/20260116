@@ -2,6 +2,7 @@ import React from 'react';
 import { CalculationResult } from '../types';
 import { formatCurrency } from '../utils/mortgageCalculator';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Wallet, TrendingUp, PiggyBank } from 'lucide-react';
 
 interface SummaryCardProps {
   result: CalculationResult;
@@ -19,6 +20,10 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
   ];
 
   const isFixedPayment = result.monthlyPaymentMin === result.monthlyPaymentMax;
+  
+  // Conservative estimate: Monthly payment should be 1/3 of income
+  const suggestedIncomeMin = Math.round(result.monthlyPaymentMin * 3);
+  const suggestedIncomeMax = Math.round(result.monthlyPaymentMax * 3);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
@@ -27,22 +32,45 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
         試算結果分析
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Left: Key Figures */}
         <div className="space-y-6">
-            <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <p className="text-sm text-blue-600 mb-1 font-medium">每月應繳金額 (參考)</p>
-                <p className="text-3xl font-bold text-blue-900">
+            <div className="p-5 bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-100 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <Wallet className="w-16 h-16 text-blue-600" />
+                </div>
+                <p className="text-sm text-blue-600 mb-1 font-bold flex items-center">
+                    每月應繳金額 
+                    {result.isGracePeriodActive && <span className="ml-2 text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">寬限期後</span>}
+                </p>
+                <p className="text-4xl font-bold text-blue-900 tracking-tight my-2">
                   {isFixedPayment 
                     ? formatCurrency(result.monthlyPaymentMin)
                     : `${formatCurrency(result.monthlyPaymentMin)} ~ ${formatCurrency(result.monthlyPaymentMax)}`
                   }
                 </p>
                 {result.isGracePeriodActive && (
-                    <p className="text-xs text-blue-500 mt-2">
-                        *含寬限期，前期僅需繳納利息
+                    <p className="text-sm text-gray-500 mt-2 border-t border-blue-100 pt-2">
+                        前 {result.monthlyRecords.findIndex(r => r.principalPaid > 0) || 0} 個月僅繳息：
+                        <span className="font-bold text-amber-600 ml-1">
+                             {formatCurrency(result.monthlyRecords[0].interestPaid)}
+                        </span>
                     </p>
                 )}
+            </div>
+
+            {/* Suggested Income Block */}
+            <div className="p-4 rounded-xl border border-dashed border-gray-300 bg-gray-50/50">
+                 <p className="text-xs text-gray-500 mb-1 flex items-center">
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    建議家庭月收入 (以房貸佔收入1/3估算)
+                 </p>
+                 <p className="text-lg font-semibold text-gray-700">
+                    {isFixedPayment 
+                        ? formatCurrency(suggestedIncomeMin)
+                        : `${formatCurrency(suggestedIncomeMin)} ~ ${formatCurrency(suggestedIncomeMax)}`
+                    }
+                 </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -54,13 +82,13 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
                     <p className="text-xs text-amber-600 mb-1">總利息支出</p>
                     <p className="text-lg font-semibold text-amber-900">{formatCurrency(result.totalInterest)}</p>
                 </div>
-                <div className="col-span-2 p-3 bg-gray-50 rounded-lg border border-gray-100 flex justify-between items-center">
+                <div className="col-span-2 p-4 bg-gray-50 rounded-lg border border-gray-100 flex justify-between items-center">
                     <div>
-                        <p className="text-xs text-gray-500">本息合計</p>
+                        <p className="text-xs text-gray-500 flex items-center"><PiggyBank className="w-3 h-3 mr-1"/>本息合計</p>
                         <p className="text-xl font-bold text-gray-900">{formatCurrency(result.totalPayment)}</p>
                     </div>
                     <div className="text-right">
-                         <span className="text-xs px-2 py-1 bg-gray-200 text-gray-600 rounded-full">
+                         <span className="text-xs px-2 py-1 bg-white border border-gray-200 text-gray-600 rounded-full shadow-sm">
                             利息佔比 {((result.totalInterest / result.totalPayment) * 100).toFixed(1)}%
                          </span>
                     </div>
@@ -69,7 +97,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
         </div>
 
         {/* Right: Pie Chart */}
-        <div className="h-64 w-full flex flex-col justify-center items-center relative">
+        <div className="h-64 w-full flex flex-col justify-center items-center relative bg-white rounded-xl border border-gray-50">
            <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -78,8 +106,9 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
                 cy="50%"
                 innerRadius={60}
                 outerRadius={80}
-                paddingAngle={5}
+                paddingAngle={2}
                 dataKey="value"
+                stroke="none"
               >
                 {chartData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -89,7 +118,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ result, totalLoanAmoun
                  formatter={(value: number) => formatCurrency(value)}
                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
               />
-              <Legend verticalAlign="bottom" height={36}/>
+              <Legend verticalAlign="bottom" height={36} iconType="circle"/>
             </PieChart>
           </ResponsiveContainer>
           {/* Center Text */}
