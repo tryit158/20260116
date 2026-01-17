@@ -1,7 +1,7 @@
 import React from 'react';
 import { LoanParams, RepaymentMethod } from '../types';
 import { formatWan } from '../utils/mortgageCalculator';
-import { DollarSign, Percent, Calendar, Clock, Calculator, Sparkles } from 'lucide-react';
+import { DollarSign, Percent, Calendar, Clock, Calculator, Sparkles, RotateCcw } from 'lucide-react';
 
 interface InputFormProps {
   params: LoanParams;
@@ -14,7 +14,7 @@ const PRESETS = [
     description: '政府優惠房貸，5年寬限期，減輕首購壓力',
     params: {
       totalAmount: 1000,
-      interestRate: 1.775, // 2.185 - subsidy (approx 0.41 difference in some periods, but effectively 1.775 for eligible) - Keeping simple or using market floor. Let's use 1.775 as the attractive rate people look for.
+      interestRate: 1.775,
       periodYears: 40,
       gracePeriodYears: 5,
       method: RepaymentMethod.EqualPrincipalAndInterest,
@@ -44,6 +44,14 @@ const PRESETS = [
   }
 ];
 
+const DEFAULT_PARAMS: LoanParams = {
+    totalAmount: 1200,
+    interestRate: 2.185,
+    periodYears: 30,
+    gracePeriodYears: 3,
+    method: RepaymentMethod.EqualPrincipalAndInterest,
+};
+
 export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
   const handleChange = (field: keyof LoanParams, value: any) => {
     onChange({ ...params, [field]: value });
@@ -51,10 +59,19 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-      <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-        <Calculator className="w-5 h-5 mr-2 text-blue-600" />
-        貸款條件設定
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-800 flex items-center">
+            <Calculator className="w-5 h-5 mr-2 text-blue-600" />
+            貸款條件設定
+          </h2>
+          <button 
+            onClick={() => onChange(DEFAULT_PARAMS)}
+            className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+            title="重置設定"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+      </div>
 
       {/* Quick Scenarios */}
       <div className="mb-6 bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
