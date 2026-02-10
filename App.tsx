@@ -5,6 +5,7 @@ import { InputForm } from './components/InputForm';
 import { SummaryCard } from './components/SummaryCard';
 import { AmortizationTable } from './components/AmortizationTable';
 import { TrendChart } from './components/TrendChart';
+import { MortgageKnowledge } from './components/MortgageKnowledge';
 import { Building2 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -24,7 +25,7 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-12">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
                 <div className="bg-blue-600 p-2 rounded-lg">
                     <Building2 className="w-6 h-6 text-white" />
@@ -45,11 +46,11 @@ const App: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="max-w-[1600px] mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            {/* Sidebar / Input Section */}
-            <div className="lg:col-span-4 space-y-6">
+            {/* Left: Sidebar / Input Section */}
+            <div className="lg:col-span-4 xl:col-span-3 space-y-6">
                 <InputForm params={params} onChange={setParams} />
                 
                 {/* Info Card */}
@@ -59,17 +60,25 @@ const App: React.FC = () => {
                 </div>
             </div>
 
-            {/* Results Section */}
-            <div className="lg:col-span-8">
+            {/* Center: Results Section */}
+            <div className="lg:col-span-8 xl:col-span-6 space-y-6">
                 <SummaryCard result={result} totalLoanAmountWan={params.totalAmount} />
                 
                 <TrendChart records={result.monthlyRecords} />
 
                 <AmortizationTable records={result.monthlyRecords} />
                 
-                <p className="text-center text-xs text-gray-400 mt-8">
-                    *本試算結果僅供參考，實際貸款金額、利率及月付金以銀行最終核貸方案為準。
-                </p>
+                <footer className="text-center text-xs text-gray-400 mt-8">
+                    <p>*本試算結果僅供參考，實際貸款金額、利率及月付金以銀行最終核貸方案為準。</p>
+                    <p className="mt-1">© 2025 台灣房貸試算神器. All rights reserved.</p>
+                </footer>
+            </div>
+
+            {/* Right: Knowledge Section (Bottom on LG, Right Sidebar on XL) */}
+            <div className="lg:col-span-12 xl:col-span-3">
+                <aside className="xl:sticky xl:top-24">
+                   <MortgageKnowledge />
+                </aside>
             </div>
         </div>
       </main>

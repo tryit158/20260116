@@ -12,7 +12,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ records }) => {
   // But for precision, we can keep all. Let's just use every 12th month for X-axis ticks to avoid clutter.
   
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
       <h2 className="text-lg font-bold text-gray-800 mb-6">還款趨勢圖</h2>
       <div className="h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">

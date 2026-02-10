@@ -15,7 +15,7 @@ export const AmortizationTable: React.FC<AmortizationTableProps> = ({ records })
   const displayedRecords = isExpanded ? records : records.slice(0, INITIAL_DISPLAY_COUNT);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-6">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex justify-between items-center">
         <h2 className="text-lg font-bold text-gray-800">每月還款明細</h2>
         <span className="text-xs bg-gray-100 text-gray-500 px-3 py-1 rounded-full">
